@@ -12,7 +12,7 @@ Model name is converted to lowercase for the collection name:
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List, Dict, Any
 
 # Example schemas (replace with your own):
 
@@ -40,6 +40,20 @@ class Product(BaseModel):
 
 # Add your own schemas here:
 # --------------------------------------------------
+
+class CarIssue(BaseModel):
+    """
+    Car issues submitted by users for diagnosis
+    Collection name: "carissue"
+    """
+    name: str = Field(..., description="Car make or brand, e.g., Toyota")
+    model: str = Field(..., description="Car model, e.g., Corolla 2018")
+    fault_code: Optional[str] = Field(None, description="OBD-II fault code like P0300")
+    description: str = Field(..., description="Free-text description of the problem")
+    suggestions: List[Dict[str, Any]] = Field(
+        default_factory=list,
+        description="Ranked list of likely parts with reasons and scores"
+    )
 
 # Note: The Flames database viewer will automatically:
 # 1. Read these schemas from GET /schema endpoint
